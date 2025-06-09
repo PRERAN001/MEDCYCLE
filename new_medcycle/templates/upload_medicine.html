@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Medicine - MediCycle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #4CAF50;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+        .container {
+            padding-top: 2rem;
+        }
+        .upload-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .btn-upload {
+            background: #4CAF50;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 2rem;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-upload:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        .medicine-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .medicine-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .medicine-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .alert {
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .expiry-warning {
+            color: #dc3545;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">MediCycle</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="upload-form">
+                    <h2 class="mb-4">Upload Medicine</h2>
+                    <div id="responseAlert" class="alert d-none" role="alert"></div>
+                    <form id="medicineForm">
+                        <div class="mb-3">
+                            <label class="form-label">Medicine Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Capsule">Capsule</option>
+                                <option value="Syrup">Syrup</option>
+                                <option value="Injection">Injection</option>
+                                <option value="Cream">Cream</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control" name="quantity" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Storage Location</label>
+                            <input type="text" class="form-control" name="location" placeholder="e.g., Kitchen Cabinet, Medicine Box" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control" name="exp_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Medicine Image</label>
+                            <input type="file" class="form-control" name="image" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn btn-upload w-100">Upload Medicine</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h2 class="mb-4">Your Medicines</h2>
+                <div id="medicineList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function getExpiryStatus(expDate) {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const expiry = new Date(expDate);
+            expiry.setHours(0,0,0,0);
+            const daysUntilExpiry = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+            if (expiry < today) {
+                return { status: "expired", text: '<span class="expiry-warning" style="color:#dc3545;"> (Expired!)</span>' };
+            } else if (daysUntilExpiry <= 7) {
+                return { status: "soon", text: '<span class="expiry-warning" style="color:#ff9800;"> (Expiring Soon!)</span>' };
+            } else {
+                return { status: "valid", text: "" };
+            }
+        }
+
+        async function fetchMedicines() {
+            try {
+                const res = await fetch("/get_medicines");
+                const data = await res.json();
+                const listDiv = document.getElementById("medicineList");
+                listDiv.innerHTML = "";
+
+                if (data.length === 0) {
+                    listDiv.innerHTML = '<div class="alert alert-info">No medicines uploaded yet.</div>';
+                    return;
+                }
+
+                data.forEach(med => {
+                    const expiryInfo = getExpiryStatus(med.exp_date);
+                    const card = document.createElement("div");
+                    card.className = "medicine-card";
+                    card.innerHTML = `
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img src="${med.image_path || '/static/default-medicine.png'}" 
+                                     class="medicine-image" 
+                                     alt="${med.name}">
+                            </div>
+                            <div class="col">
+                                <h5 class="mb-1">${med.name}</h5>
+                                <p class="mb-1">
+                                    <i class="bi bi-tag"></i> ${med.category}<br>
+                                    <i class="bi bi-box"></i> Quantity: ${med.quantity}<br>
+                                    <i class="bi bi-geo-alt"></i> Location: ${med.location}<br>
+                                    <i class="bi bi-calendar"></i> Expiry: ${formatDate(med.exp_date)}
+                                    ${expiryInfo.text}
+                                </p>
+                                <div style="font-size:12px;color:#888;">Medicine ID: ${med._id}</div>
+                                <div class="mt-2">
+                                    <button onclick="shareToCommunity('${med._id}')" class="btn btn-warning">
+                                        <i class="bi bi-share"></i> Share to Community
+                                    </button>
+                                    <a href="/community" class="btn btn-outline-warning ms-2">
+                                        <i class="bi bi-people"></i> View Community
+                                    </a>
+                                    ${expiryInfo.status === "expired" ? `<a href="/disposal_guide/${med._id}" class="btn btn-danger ms-2">Disposal Guide</a>` : ""}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listDiv.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.getElementById("medicineForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const responseAlert = document.getElementById("responseAlert");
+            responseAlert.classList.add("d-none");
+            
+            try {
+                const formData = new FormData(e.target);
+                const response = await fetch("/upload_medicine", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                responseAlert.textContent = result.message || result.error;
+                responseAlert.classList.remove("d-none");
+                responseAlert.classList.remove("alert-success", "alert-danger");
+                responseAlert.classList.add(response.ok ? "alert-success" : "alert-danger");
+
+                if (response.ok) {
+                    e.target.reset();
+                    fetchMedicines();
+                }
+            } catch (error) {
+                responseAlert.textContent = "An error occurred. Please try again.";
+                responseAlert.classList.remove("d-none");
+                responseAlert.classList.add("alert-danger");
+            }
+        });
+
+        function logout() {
+            fetch('/logout', { method: 'POST' })
+                .then(() => window.location.href = '/');
+        }
+
+        function shareToCommunity(medicineId) {
+            if (confirm('Do you want to share this medicine to the community?')) {
+                fetch('/share_to_community', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ medicine_id: medicineId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        // Optionally redirect to community page
+                        window.location.href = '/community';
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while sharing the medicine.');
+                });
+            }
+        }
+
+        // Load medicines on page load
+        fetchMedicines();
+    </script>
+</body>
+</html>

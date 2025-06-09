@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCycle - Smart Medicine Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        .btn-custom {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            margin: 0.5rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+        .leaderboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .article-card {
+            height: 100%;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .article-card img {
+            height: 200px;
+            object-fit: cover;
+        }
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .faq-question {
+            background: #f8f9fa;
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .faq-answer {
+            padding: 1rem;
+            display: none;
+        }
+        .faq-answer.active {
+            display: block;
+        }
+        .leaderboard-section {
+            padding: 4rem 2rem;
+            background: var(--light-color);
+        }
+
+        .leaderboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .leaderboard-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--dark-color);
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--light-color);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(10px);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 50px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            flex-grow: 1;
+            margin-left: 1rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .medicine-count {
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .medal {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .gold { color: #FFD700; }
+        .silver { color: #C0C0C0; }
+        .bronze { color: #CD7F32; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">MediCycle</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#leaderboard">Leaderboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#articles">Articles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/community">Community</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 mb-4">Smart Medicine Management</h1>
+            <p class="lead mb-4">Track, manage, and never miss your medicine schedule again</p>
+            <div class="d-flex justify-content-center">
+                <a href="/login" class="btn btn-light btn-custom">Login</a>
+                <a href="/signup" class="btn btn-outline-light btn-custom">Sign Up</a>
+                <a href="/community" class="btn btn-success btn-custom ms-2">Community</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">Track Inventory</h3>
+                        <p class="card-text">Keep track of your medicine stock and never run out of essential medications.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">Expiry Alerts</h3>
+                        <p class="card-text">Get timely notifications about expiring medicines through WhatsApp.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">Smart Organization</h3>
+                        <p class="card-text">Organize your medicines by category and location for easy access.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Section -->
+    <section class="leaderboard-section" id="leaderboard">
+        <div class="leaderboard-container" data-aos="fade-up">
+            <h2 class="leaderboard-title">Community Leaders</h2>
+            <ul class="leaderboard-list" id="leaderboardList">
+                <!-- Leaderboard items will be dynamically inserted here -->
+            </ul>
+        </div>
+    </section>
+
+    <!-- Articles Section -->
+    <section id="articles" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Latest Articles</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card article-card">
+                        <img src="https://imgs.search.brave.com/7wCjUrfBtFeM2ECAyoh94zNx5OULyjvR70npqeMIKUM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTM1/MTE2NjA1L3Bob3Rv/L2RyYXdlci1vZi1t/ZWRpY2FsLXN1cHBs/aWVzLmpwZz9zPTYx/Mng2MTImdz0wJms9/MjAmYz1PNGhDaVpu/Q2ltWGJKTjhNZlY0/Vm1RUmZlYVpreHNY/eDlsUEJqWG0zNHFV/PQ" class="card-img-top" alt="Medicine Storage">
+                        <div class="card-body">
+                            <h5 class="card-title">Proper Medicine Storage Guide</h5>
+                            <p class="card-text">Learn the best practices for storing different types of medicines to maintain their effectiveness.</p>
+                            <a href="#" class="btn btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card article-card">
+                        <img src="https://imgs.search.brave.com/TeBvbPKR7Cy9rHGuX1Bootk4Q7mwGRb-xciZ6R8e1CE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/aGlnaHNwZWVkdHJh/aW5pbmcuY28udWsv/aHViL3dwLWNvbnRl/bnQvdXBsb2Fkcy8y/MDE3LzAyL2luZmVj/dGlvdXMtd2FzdGUt/ZGlzcG9zYWwuanBn" class="card-img-top" alt="Medicine Disposal">
+                        <div class="card-body">
+                            <h5 class="card-title">Safe Medicine Disposal Methods</h5>
+                            <p class="card-text">Discover environmentally friendly ways to dispose of expired or unused medicines.</p>
+                            <a href="#" class="btn btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card article-card">
+                        <img src="https://imgs.search.brave.com/7wCjUrfBtFeM2ECAyoh94zNx5OULyjvR70npqeMIKUM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTM1/MTE2NjA1L3Bob3Rv/L2RyYXdlci1vZi1t/ZWRpY2FsLXN1cHBs/aWVzLmpwZz9zPTYx/Mng2MTImdz0wJms9/MjAmYz1PNGhDaVpu/Q2ltWGJKTjhNZlY0/Vm1RUmZlYVpreHNY/eDlsUEJqWG0zNHFV/PQ" class="card-img-top" alt="Medicine Management">
+                        <div class="card-body">
+                            <h5 class="card-title">Digital Medicine Management Tips</h5>
+                            <p class="card-text">How to effectively use digital tools to manage your medicine inventory and schedules.</p>
+                            <a href="#" class="btn btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            How do I track my medicine inventory?
+                            <i class="bi bi-chevron-down float-end"></i>
+                        </div>
+                        <div class="faq-answer">
+                            You can easily track your medicine inventory by logging into your account and using our intuitive interface to add, update, and monitor your medicines. The system will automatically notify you when medicines are running low or approaching expiry.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            How does the community sharing feature work?
+                            <i class="bi bi-chevron-down float-end"></i>
+                        </div>
+                        <div class="faq-answer">
+                            The community sharing feature allows you to share excess medicines with others in your community. Simply add your medicine to the community board, and interested users can contact you through the platform to arrange pickup or delivery.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            What happens when my medicine is about to expire?
+                            <i class="bi bi-chevron-down float-end"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Our system automatically monitors expiry dates and sends you WhatsApp notifications when medicines are approaching their expiry date. You'll receive alerts 7 days before expiry, giving you time to use or properly dispose of the medicine.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 MediCycle. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- SOS Button (fixed position) -->
+    <button id="sosBtn" class="btn btn-danger" style="position:fixed;bottom:30px;right:30px;z-index:999;">
+      <i class="bi bi-exclamation-triangle"></i> SOS
+    </button>
+
+    <!-- SOS Modal -->
+    <div class="modal fade" id="sosModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="sosForm">
+            <div class="modal-header">
+              <h5 class="modal-title">Request Emergency Medicine</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="medicineName" class="form-label">Medicine Name</label>
+                <input type="text" class="form-control" id="medicineName" name="medicineName" required>
+              </div>
+              <input type="hidden" id="userLocation" name="userLocation">
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger">Send SOS</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    let userLocation = "";
+
+    window.onload = function() {
+      // Get user location as soon as the page loads
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          userLocation = position.coords.latitude + "," + position.coords.longitude;
+          document.getElementById('userLocation').value = userLocation;
+        }, function(error) {
+          userLocation = "Location not available";
+          document.getElementById('userLocation').value = userLocation;
+        });
+      }
+    };
+
+    // Show modal on SOS button click
+    if (document.getElementById('sosBtn')) {
+      document.getElementById('sosBtn').onclick = function() {
+        var modal = new bootstrap.Modal(document.getElementById('sosModal'));
+        modal.show();
+      };
+    }
+
+    // Handle SOS form submit
+    if (document.getElementById('sosForm')) {
+      document.getElementById('sosForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const medicineName = document.getElementById('medicineName').value;
+        const location = document.getElementById('userLocation').value;
+
+        const res = await fetch('/sos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ medicine_name: medicineName, location: location })
+        });
+        const data = await res.json();
+        alert(data.message || "SOS sent!");
+        bootstrap.Modal.getInstance(document.getElementById('sosModal')).hide();
+      };
+    }
+
+    // FAQ Toggle Function
+    function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('i');
+        
+        if (answer.classList.contains('active')) {
+            answer.classList.remove('active');
+            icon.classList.remove('bi-chevron-up');
+            icon.classList.add('bi-chevron-down');
+        } else {
+            answer.classList.add('active');
+            icon.classList.remove('bi-chevron-down');
+            icon.classList.add('bi-chevron-up');
+        }
+    }
+
+    // Function to get medal emoji based on rank
+    function getMedal(rank) {
+        switch(rank) {
+            case 1: return '<span class="medal gold">🥇</span>';
+            case 2: return '<span class="medal silver">🥈</span>';
+            case 3: return '<span class="medal bronze">🥉</span>';
+            default: return '';
+        }
+    }
+
+    // Function to update leaderboard
+    function updateLeaderboard() {
+        fetch('/get_leaderboard')
+            .then(response => response.json())
+            .then(data => {
+                const leaderboardList = document.getElementById('leaderboardList');
+                leaderboardList.innerHTML = '';
+
+                data.forEach(user => {
+                    const li = document.createElement('li');
+                    li.className = 'leaderboard-item';
+                    li.innerHTML = `
+                        ${getMedal(user.rank)}
+                        <div class="rank">#${user.rank}</div>
+                        <div class="user-info">
+                            <div class="user-name">${user.name}</div>
+                            <div class="medicine-count">Shared ${user.total_medicines} medicines</div>
+                        </div>
+                    `;
+                    leaderboardList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching leaderboard:', error);
+            });
+    }
+
+    // Update leaderboard when page loads
+    document.addEventListener('DOMContentLoaded', updateLeaderboard);
+
+    // Update leaderboard every 5 minutes
+    setInterval(updateLeaderboard, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

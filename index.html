@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicycle - Sustainable Healthcare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d4ff; /* Electric Cyan */
+            --secondary-color: #ff4d94; /* Vivid Pink */
+            --accent-color: #00ffcc; /* Neon Teal */
+            --light-color: #f5faff; /* Soft White */
+            --dark-color: #1a1e29; /* Deep Charcoal */
+            --success-color: #00e676; /* Bright Green */
+            --warning-color: #ff9100; /* Orange Glow */
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --font-main: 'Poppins', sans-serif;
+            --font-secondary: 'Inter', sans-serif;
+            --glow-color: rgba(0, 212, 255, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-main);
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+            font-weight: 300;
+        }
+        
+        /* SOS Button Styling */
+        .sos-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+            background: var(--gradient);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .sos-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.5);
+        }
+        
+        .sos-button i {
+            font-size: 1.2rem;
+            color: white;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Glowing Icon Effect */
+        .glow-icon {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .glow-icon::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient);
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .glow-icon:hover::after {
+            opacity: 1;
+        }
+        
+        .glow-icon:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        /* Modern Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--dark-color);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .navbar.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            font-family: var(--font-secondary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2.5rem;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        /* Hero Section with Particle Effect */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 2rem;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, rgba(255, 77, 148, 0) 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            animation: fadeInDown 1s ease;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Medicine Scanner Section */
+        .medicine-scanner {
+            padding: 5rem 2rem;
+            background: white;
+            text-align: center;
+        }
+        
+        .scanner-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--light-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .scanner-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .scanner-description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .scanner-options {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .scanner-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--gradient);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .scanner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .scanner-btn i {
+            font-size: 1.2rem;
+        }
+        
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 1rem auto;
+            display: none;
+            border-radius: 10px;
+        }
+        
+        .medicine-info {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            text-align: left;
+        }
+        
+        .medicine-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .medicine-info p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        #cameraInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- SOS Button -->
+    <a href="#" class="sos-button">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Medicycle</div>
+        <ul class="nav-links">
+            <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="#"><i class="fas fa-info-circle"></i>About</a></li>
+            <li><a href="#"><i class="fas fa-hand-holding-medical"></i>Services</a></li>
+            <li><a href="#"><i class="fas fa-phone-alt"></i>Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to <span>Medicycle</span></h1>
+            <p>Transforming healthcare waste management through sustainable solutions and innovative technology.</p>
+            <a href="#" class="btn">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Medicine Scanner Section -->
+    <section class="medicine-scanner" id="medicineScanner">
+        <div class="scanner-container" data-aos="fade-up">
+            <h2 class="scanner-title">Medicine Scanner</h2>
+            <p class="scanner-description">Upload or capture an image of your medicine to get detailed information about its uses and side effects.</p>
+            
+            <div class="scanner-options">
+                <button class="scanner-btn" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-upload"></i> Upload Image
+                </button>
+                <button class="scanner-btn" onclick="document.getElementById('cameraInput').click()">
+                    <i class="fas fa-camera"></i> Take Photo
+                </button>
+            </div>
+            
+            <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)">
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleImageUpload(event)">
+            
+            <img id="imagePreview" alt="Medicine Preview">
+            
+            <div class="medicine-info" id="medicineInfo">
+                <h3>Medicine Information</h3>
+                <p><strong>Name:</strong> <span id="medicineName"></span></p>
+                <p><strong>Uses:</strong> <span id="medicineUses"></span></p>
+                <p><strong>Side Effects:</strong> <span id="medicineSideEffects"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imagePreview = document.getElementById('imagePreview');
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    
+                    // Create FormData and send to backend
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    
+                    // Show loading state
+                    document.getElementById('medicineInfo').style.display = 'none';
+                    
+                    // Send to backend for processing
+                    fetch('/process-medicine-image', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display medicine information
+                        document.getElementById('medicineName').textContent = data.name;
+                        document.getElementById('medicineUses').textContent = data.uses;
+                        document.getElementById('medicineSideEffects').textContent = data.sideEffects;
+                        document.getElementById('medicineInfo').style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error processing image. Please try again.');
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html> 
