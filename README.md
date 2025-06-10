@@ -22,11 +22,18 @@ MedCycle is a community-driven platform where users can upload unused or near-ex
 3. **Expiry Alerts** ⏳ – Notifications ensure timely usage before expiration.  
 4. **SOS Feature** 🆘 – Urgent requests notify nearby users instantly.  
 
-## 🎯 Future Enhancements  
-- AI-based prescription matching 🧠  
-- Blockchain-based verification 🔗  
-- Mobile app integration 📱  
-
----
-
-Let me know if you need any refinements! 🚀
+## 🛠️ Setup Instructions  
+1. Replace the MongoDB connection location with your local MongoDB connection string.  
+2. Create the necessary collections in MongoDB as per the requirements.  
+3. Download the required dependencies using:  
+   ```bash
+   pip install -r requirements.txt
+   - Navigate to the new_medcycle folder:
+cd new_medcycle
+- Run the application:
+python app.py
+🎯 Future Enhancements
+- AI-based prescription matching 🧠
+- Blockchain-based verification 🔗
+- Mobile app integration
+- Offline processing
